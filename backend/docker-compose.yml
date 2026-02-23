@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  uptime-backend:
+    build: .
+    container_name: uptime-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/uptime-tool
+      - JWT_SECRET=your-jwt-secret-key
+    depends_on:
+      - mongo
+    networks:
+      - uptime-network
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7-jammy
+    container_name: uptime-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - uptime-network
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+
+networks:
+  uptime-network:
+    driver: bridge

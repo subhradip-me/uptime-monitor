@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  .btn-primary {
+    @apply bg-gray-900 text-gray-50 hover:bg-gray-900/90 h-10 py-2 px-4;
+  }
+  
+  .btn-secondary {
+    @apply border border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-900 h-10 py-2 px-4;
+  }
+  
+  .btn-ghost {
+    @apply hover:bg-gray-100 hover:text-gray-900 h-10 py-2 px-4;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-200 bg-transparent hover:bg-gray-100 h-10 py-2 px-4;
+  }
+  
+  .btn-sm {
+    @apply h-9 rounded-md px-3 text-xs;
+  }
+  
+  .btn-lg {
+    @apply h-11 rounded-md px-8;
+  }
+  
+  .card {
+    @apply rounded-lg border border-gray-200 bg-white text-gray-950 shadow-sm;
+  }
+  
+  .input {
+    @apply flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .input-select {
+    @apply px-3 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-950/10 focus:border-gray-300 transition-colors;
+  }
+  
+  .badge {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2;
+  }
+  
+  .badge-default {
+    @apply border-transparent bg-gray-900 text-gray-50 hover:bg-gray-900/80;
+  }
+  
+  .badge-secondary {
+    @apply border-transparent bg-gray-100 text-gray-900 hover:bg-gray-100/80;
+  }
+  
+  .badge-success {
+    @apply border-transparent bg-green-100 text-green-800 hover:bg-green-100/80;
+  }
+  
+  .badge-destructive {
+    @apply border-transparent bg-red-100 text-red-800 hover:bg-red-100/80;
+  }
+  
+  .badge-outline {
+    @apply text-gray-950 border-gray-200;
+  }
+  
+  .separator {
+    @apply shrink-0 bg-gray-200;
+  }
+  
+  .separator-horizontal {
+    @apply h-[1px] w-full;
+  }
+  
+  .separator-vertical {
+    @apply h-full w-[1px];
+  }
+  
+  .nav-item {
+    @apply flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-gray-600 rounded-lg transition-all duration-200 hover:bg-gray-50 hover:text-gray-900;
+  }
+  
+  .nav-item.active {
+    @apply bg-gray-900 text-white shadow-sm;
+  }
+
+  .nav-item.active:hover {
+    @apply bg-gray-800 text-white;
+  }
+  
+  .status-dot {
+    @apply w-2.5 h-2.5 rounded-full ring-2 ring-white shadow-sm;
+  }
+  
+  .status-dot-up {
+    @apply bg-green-500;
+  }
+  
+  .status-dot-down {
+    @apply bg-red-500;
+  }
+  
+  .status-dot-unknown {
+    @apply bg-gray-400;
+  }
+  
+  .table {
+    @apply w-full caption-bottom text-sm;
+  }
+  
+  .table-header {
+    @apply border-b border-gray-200;
+  }
+  
+  .table-row {
+    @apply border-b border-gray-200 transition-colors hover:bg-gray-50/50 data-[state=selected]:bg-gray-50;
+  }
+  
+  .table-head {
+    @apply h-12 px-4 text-left align-middle font-medium text-gray-500;
+  }
+  
+  .table-cell {
+    @apply p-4 align-middle;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.15);
+  background-clip: content-box;
+}
+
+/* Focus styles */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.8);
+  outline-offset: 2px;
+}

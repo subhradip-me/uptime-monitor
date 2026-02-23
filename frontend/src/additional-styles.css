@@ -1,0 +1,8 @@
+/* Additional status styles */
+.status-dot-error {
+  @apply bg-amber-500;
+}
+
+.badge-warning {
+  @apply border-transparent bg-amber-100 text-amber-800 hover:bg-amber-100/80;
+}

@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  uptime-backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uptime-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/uptime-tool
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret-in-production}
+    depends_on:
+      - mongo
+    networks:
+      - uptime-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/auth/health", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  uptime-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: uptime-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - uptime-backend
+    networks:
+      - uptime-network
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7-jammy
+    container_name: uptime-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-changeme}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - uptime-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  uptime-network:
+    driver: bridge
