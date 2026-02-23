@@ -1,3 +1,6 @@
+
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 # Uptime Monitor 🚀
 
 A modern, real-time uptime monitoring tool built with React, Redux, Node.js, Express, MongoDB, and Socket.IO. Features a minimalist Neobrutalism UI design.
