@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Activity, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Terminal, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -50,156 +50,192 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex items-center justify-center mb-6">
-          <div className="w-12 h-12 bg-neo-yellow border-2 border-black flex items-center justify-center">
-            <Activity className="h-6 w-6 text-black" />
+    <div className="min-h-screen bg-term-bg flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* CRT Effect */}
+      <div className="scanline" />
+      
+      <div className="sm:mx-auto sm:w-full sm:max-w-md z-10">
+        {/* Terminal Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-12 h-12 border border-term-green flex items-center justify-center shadow-glow-green">
+              <Terminal className="h-6 w-6 text-term-green" />
+            </div>
           </div>
-          <h1 className="ml-3 text-2xl font-bold">Uptime Monitor</h1>
+          <h1 className="text-2xl font-bold text-term-white tracking-wider">
+            <span className="text-term-green">UPTIME</span>_MONITOR
+          </h1>
+          <p className="text-sm text-term-gray mt-2">New User Registration</p>
         </div>
-        <div className="text-center border-2 border-black p-4 bg-neo-gray mb-6">
-          <h2 className="text-xl font-bold">Create Account</h2>
-          <p className="text-sm text-gray-600 mt-1">Get started with monitoring your services</p>
-        </div>
-      </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 border-2 border-black shadow-neo">
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-neo-red border-2 border-black text-white px-4 py-3 text-sm font-semibold">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="username" className="form-label">
-                Username
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  autoComplete="username"
-                  required
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="input pl-10"
-                  placeholder="Enter username"
-                />
-              </div>
+        {/* Terminal Window */}
+        <div className="terminal-window">
+          <div className="terminal-header">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-term-red"></div>
+              <div className="w-3 h-3 rounded-full bg-term-yellow"></div>
+              <div className="w-3 h-3 rounded-full bg-term-green"></div>
+            </div>
+            <span className="terminal-title ml-4">register.sh</span>
+          </div>
+          
+          <div className="p-6">
+            {/* Boot Sequence */}
+            <div className="mb-6 text-xs text-term-gray font-mono space-y-1">
+              <p>$ init user_registration_module</p>
+              <p>$ checking_system_requirements...</p>
+              <p className="text-term-green">[OK] Ready for new user setup</p>
+              <p className="text-term-cyan">root@uptime:~$ <span className="animate-blink">_</span></p>
             </div>
 
-            <div>
-              <label htmlFor="email" className="form-label">
-                Email address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              {error && (
+                <div className="border border-term-red bg-term-red/10 text-term-red px-4 py-3 text-sm font-mono">
+                  <span className="text-term-red">[ERROR]</span> {error}
                 </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="input pl-10"
-                  placeholder="Enter email"
-                />
-              </div>
-            </div>
+              )}
 
-            <div>
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+              <div>
+                <label htmlFor="username" className="form-label font-mono">
+                  <span className="text-term-cyan">new_user</span>@<span className="text-term-green">uptime</span>:~$ username
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-4 w-4 text-term-gray" />
+                  </div>
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    required
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="input pl-10 font-mono"
+                    placeholder="choose_username"
+                  />
                 </div>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="input pl-10 pr-10"
-                  placeholder="Enter password"
-                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="form-label font-mono">
+                  <span className="text-term-cyan">new_user</span>@<span className="text-term-green">uptime</span>:~$ email
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-4 w-4 text-term-gray" />
+                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="input pl-10 font-mono"
+                    placeholder="user@domain.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="password" className="form-label font-mono">
+                  <span className="text-term-cyan">new_user</span>@<span className="text-term-green">uptime</span>:~$ password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-4 w-4 text-term-gray" />
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="input pl-10 pr-10 font-mono"
+                    placeholder="set_password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-term-gray hover:text-term-white"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="confirmPassword" className="form-label font-mono">
+                  <span className="text-term-cyan">new_user</span>@<span className="text-term-green">uptime</span>:~$ confirm_password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-4 w-4 text-term-gray" />
+                  </div>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="input pl-10 pr-10 font-mono"
+                    placeholder="confirm_password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-term-gray hover:text-term-white"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-2">
                 <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
+                  type="submit"
+                  disabled={loading}
+                  className="btn btn-primary w-full font-mono"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  {loading ? (
+                    <span className="flex items-center justify-center">
+                      <span className="terminal-spinner mr-2"></span>
+                      creating_account...
+                    </span>
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
+                    <span>$ create_user --admin</span>
                   )}
                 </button>
               </div>
-            </div>
 
-            <div>
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="input pl-10 pr-10"
-                  placeholder="Confirm password"
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
+              <div className="text-center text-sm pt-2 font-mono">
+                <span className="text-term-gray">Have an account? </span>
+                <Link to="/login" className="text-term-cyan hover:text-term-green hover:underline">
+                  $ login --existing
+                </Link>
               </div>
-            </div>
+            </form>
+          </div>
+        </div>
 
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn btn-primary w-full"
-              >
-                {loading ? 'Creating account...' : 'Sign up'}
-              </button>
-            </div>
-
-            <div className="text-center text-sm pt-2">
-              Already have an account?{' '}
-              <Link to="/login" className="font-semibold underline">
-                Sign in
-              </Link>
-            </div>
-          </form>
+        {/* Footer */}
+        <div className="mt-6 text-center text-xs text-term-gray font-mono">
+          <p>Secure Connection | SSH-2.0-OpenSSH_8.9</p>
+          <p className="mt-1">© 2024 Uptime Monitor Systems</p>
         </div>
       </div>
     </div>

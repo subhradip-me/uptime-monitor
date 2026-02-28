@@ -10,7 +10,10 @@ import {
   TrendingUp,
   CheckCircle2,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  Terminal,
+  Cpu,
+  Clock
 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -69,123 +72,135 @@ const Dashboard = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'UP':
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-term-green" />;
       case 'DOWN':
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-term-red" />;
       case 'ERROR':
-        return <AlertCircle className="h-5 w-5 text-amber-500" />;
+        return <AlertCircle className="h-4 w-4 text-term-yellow" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+        return <AlertCircle className="h-4 w-4 text-term-gray" />;
     }
   };
 
   const getStatusBadge = (status) => {
-    const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium";
+    const baseClasses = "inline-flex items-center px-2 py-0.5 text-xs font-medium border";
     switch (status) {
       case 'UP':
-        return `${baseClasses} bg-green-100 text-green-800`;
+        return `${baseClasses} border-term-green text-term-green`;
       case 'DOWN':
-        return `${baseClasses} bg-red-100 text-red-800`;
+        return `${baseClasses} border-term-red text-term-red`;
       default:
-        return `${baseClasses} bg-gray-100 text-gray-800`;
+        return `${baseClasses} border-term-gray text-term-gray`;
     }
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="w-16 h-16 border-4 border-black border-t-neo-yellow animate-spin"></div>
+        <div className="text-center">
+          <div className="terminal-spinner mx-auto mb-4"></div>
+          <p className="text-term-gray text-sm">Initializing systems...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-neo-gray border-2 border-black p-4 shadow-neo">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-black">Dashboard</h1>
-            <p className="text-sm text-gray-600 mt-1">Monitor your services</p>
+      {/* Header - Consistent with Targets/Logs */}
+      <div className="terminal-window">
+        <div className="terminal-header">
+          <Activity className="h-4 w-4 text-term-green" />
+          <span className="terminal-title">System Dashboard</span>
+        </div>
+        <div className="p-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-xl font-bold text-term-white flex items-center gap-2">
+                <span className="text-term-green">root@uptime:~$</span> status
+              </h1>
+              <p className="text-sm text-term-gray mt-1">Real-time monitoring interface</p>
+            </div>
+            <button
+              onClick={() => window.location.href = '/targets'}
+              className="btn btn-primary"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Target
+            </button>
           </div>
-          <button
-            onClick={() => window.location.href = '/targets'}
-            className="btn btn-primary"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Add Target
-          </button>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div className="card bg-white border-2">
+      {/* Stats Grid - Consistent Style */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="terminal-window p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-gray-600 mb-2">Total Targets</p>
-              <p className="text-3xl font-bold text-black">{stats?.totalTargets || 0}</p>
+              <p className="text-xs text-term-gray uppercase tracking-wider mb-1">Total Targets</p>
+              <p className="text-2xl font-bold text-term-white">{stats?.totalTargets || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-neo-gray border-2 border-black flex items-center justify-center">
-              <Globe className="h-6 w-6 text-black" />
+            <div className="w-10 h-10 border border-term-border flex items-center justify-center">
+              <Globe className="h-5 w-5 text-term-cyan" />
             </div>
           </div>
         </div>
 
-        <div className="card bg-neo-blue border-2">
+        <div className="terminal-window p-4 border-term-green/30">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-black/70 mb-2">Online</p>
-              <p className="text-3xl font-bold text-black">{stats?.targetsUp || 0}</p>
+              <p className="text-xs text-term-green uppercase tracking-wider mb-1">Online</p>
+              <p className="text-2xl font-bold text-term-green">{stats?.targetsUp || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-white border-2 border-black flex items-center justify-center">
-              <CheckCircle2 className="h-6 w-6 text-black" />
+            <div className="w-10 h-10 border border-term-green flex items-center justify-center">
+              <CheckCircle2 className="h-5 w-5 text-term-green" />
             </div>
           </div>
         </div>
 
-        <div className="card bg-neo-red border-2">
+        <div className="terminal-window p-4 border-term-red/30">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-white/90 mb-2">Offline</p>
-              <p className="text-3xl font-bold text-white">{stats?.targetsDown || 0}</p>
+              <p className="text-xs text-term-red uppercase tracking-wider mb-1">Offline</p>
+              <p className="text-2xl font-bold text-term-red">{stats?.targetsDown || 0}</p>
             </div>
-            <div className="w-12 h-12 bg-white border-2 border-black flex items-center justify-center">
-              <XCircle className="h-6 w-6 text-black" />
+            <div className="w-10 h-10 border border-term-red flex items-center justify-center">
+              <XCircle className="h-5 w-5 text-term-red" />
             </div>
           </div>
         </div>
 
-        <div className="card bg-neo-yellow border-2">
+        <div className="terminal-window p-4 border-term-yellow/30">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-black/70 mb-2">Avg Response</p>
-              <p className="text-2xl font-bold text-black">
+              <p className="text-xs text-term-yellow uppercase tracking-wider mb-1">Avg Response</p>
+              <p className="text-2xl font-bold text-term-yellow">
                 {formatResponseTime(stats?.averageResponseTime)}
               </p>
             </div>
-            <div className="w-12 h-12 bg-white border-2 border-black flex items-center justify-center">
-              <TrendingUp className="h-6 w-6 text-black" />
+            <div className="w-10 h-10 border border-term-yellow flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-term-yellow" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Consistent with other pages */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Service Status */}
         <div className="xl:col-span-2">
-          <div className="card bg-white border-2">
-            <div className="px-4 py-3 border-b-2 border-black bg-neo-yellow">
-              <h3 className="text-lg font-bold text-black">Service Status</h3>
-              <p className="text-xs text-black/70 mt-0.5">All monitored services</p>
+          <div className="terminal-window h-[508px]">
+            <div className="terminal-header">
+              <Cpu className="h-4 w-4 text-term-green" />
+              <span className="terminal-title">Service Status</span>
+              <span className="ml-auto text-xs text-term-gray">{targets.length} nodes</span>
             </div>
             
-            <div className="p-4 h-[440px] overflow-y-auto">
+            <div className="p-4">
               {targets.length > 0 ? (
                 <div className="space-y-2">
                   {targets.map((target) => (
-                    <div key={target._id} className="group flex items-center justify-between p-3 border-2 border-black bg-white hover:bg-neo-gray transition-colors">
+                    <div key={target._id} className="group flex items-center justify-between p-3 border border-term-border bg-term-bg hover:border-term-green/50 transition-colors">
                       <div className="flex items-center space-x-3 min-w-0 flex-1">
                         <div className={`status-dot flex-shrink-0 ${
                           target.lastStatus === 'UP' ? 'status-dot-up' : 
@@ -193,8 +208,8 @@ const Dashboard = () => {
                           target.lastStatus === 'ERROR' ? 'status-dot-error' : 'status-dot-unknown'
                         }`}></div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-black truncate">{target.name}</p>
-                          <p className="text-xs text-gray-600 truncate mt-0.5">{target.url}</p>
+                          <p className="text-sm font-medium text-term-white truncate">{target.name}</p>
+                          <p className="text-xs text-term-gray truncate mt-0.5">{target.url}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 flex-shrink-0">
@@ -204,13 +219,13 @@ const Dashboard = () => {
                           target.lastStatus === 'ERROR' ? 'badge-warning' : 
                           'badge-secondary'
                         }`}>
-                          {target.lastStatus || 'Unknown'}
+                          {target.lastStatus || 'UNKNOWN'}
                         </span>
-                        <div className="text-right px-2 py-1 bg-neo-gray border-2 border-black">
-                          <p className="text-sm font-bold text-black">
+                        <div className="text-right px-2 py-1 border border-term-border bg-term-bg min-w-[70px]">
+                          <p className="text-sm font-bold text-term-white">
                             {formatUptime(target.uptimePercentage || 0)}
                           </p>
-                          <p className="text-xs text-gray-600">uptime</p>
+                          <p className="text-xs text-term-gray">uptime</p>
                         </div>
                       </div>
                     </div>
@@ -218,11 +233,11 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <div className="mx-auto w-16 h-16 bg-neo-gray border-2 border-black flex items-center justify-center mb-4">
-                    <Globe className="h-8 w-8 text-black" />
+                  <div className="mx-auto w-16 h-16 border border-term-border flex items-center justify-center mb-4">
+                    <Globe className="h-8 w-8 text-term-gray" />
                   </div>
-                  <h3 className="text-sm font-bold text-black mb-2">No targets configured</h3>
-                  <p className="text-sm text-gray-600 mb-4">Get started by adding your first monitoring target</p>
+                  <p className="text-term-gray text-sm mb-2">No targets configured</p>
+                  <p className="text-term-gray text-xs mb-4">Initialize monitoring by adding your first target</p>
                   <button 
                     onClick={() => window.location.href = '/targets'}
                     className="btn btn-primary"
@@ -237,18 +252,19 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="card bg-white border-2 h-[520px] flex flex-col">
-          <div className="px-4 py-3 border-b-2 border-black bg-neo-gray">
-            <h3 className="text-lg font-bold text-black">Recent Activity</h3>
-            <p className="text-xs text-gray-600 mt-0.5">Latest events</p>
+        <div className="terminal-window h-[508px]">
+          <div className="terminal-header">
+            <Activity className="h-4 w-4 text-term-cyan" />
+            <span className="terminal-title">Recent Activity</span>
+            <span className="ml-auto text-xs text-term-gray">Live</span>
           </div>
           
-          <div className="p-4 flex-1 overflow-y-auto">
+          <div className="p-4 h-[440px] overflow-y-auto">
             {recentLogs.length > 0 ? (
               <div className="space-y-2">
-                {recentLogs.slice(0, 8).map((log) => (
-                  <div key={log._id} className="flex items-start space-x-2 p-2 border-2 border-black bg-white hover:bg-neo-gray transition-colors">
-                    <div className={`status-dot mt-1.5 flex-shrink-0 ${
+                {recentLogs.slice(0, 20).map((log) => (
+                  <div key={log._id} className="flex items-start space-x-2 p-2 border border-term-border bg-term-bg hover:border-term-cyan/30 transition-colors">
+                    <div className={`status-dot mt-1 flex-shrink-0 ${
                       log.status === 'UP' ? 'status-dot-up' : 
                       log.status === 'DOWN' ? 'status-dot-down' : 
                       log.status === 'ERROR' ? 'status-dot-error' : 'status-dot-unknown'
@@ -256,10 +272,10 @@ const Dashboard = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-black truncate">
+                          <p className="text-sm font-bold text-term-white truncate">
                             {log.targetId?.name || 'Unknown'}
                           </p>
-                          <p className="text-xs text-gray-600 mt-0.5">
+                          <p className="text-xs text-term-gray mt-0.5">
                             {log.status} • {new Date(log.timestamp).toLocaleTimeString()}
                           </p>
                         </div>
@@ -275,11 +291,11 @@ const Dashboard = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="mx-auto w-16 h-16 bg-neo-gray border-2 border-black flex items-center justify-center mb-4">
-                  <Activity className="h-8 w-8 text-black" />
+                <div className="mx-auto w-16 h-16 border border-term-border flex items-center justify-center mb-4">
+                  <Activity className="h-8 w-8 text-term-gray" />
                 </div>
-                <h3 className="text-sm font-bold text-black mb-2">No activity yet</h3>
-                <p className="text-sm text-gray-600">Activity will appear here once monitoring starts</p>
+                <p className="text-term-gray text-sm mb-2">No activity detected</p>
+                <p className="text-term-gray text-xs">Activity logs will populate once monitoring begins</p>
               </div>
             )}
           </div>
