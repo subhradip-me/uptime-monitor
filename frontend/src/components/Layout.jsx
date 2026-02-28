@@ -136,8 +136,8 @@ const Layout = () => {
           </div>
         </div>
 
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 p-2 sm:p-4 lg:p-6 overflow-x-hidden pb-20 sm:pb-6">
+          <div className="max-w-7xl mx-auto w-full">
             <Outlet />
           </div>
         </main>

@@ -79,7 +79,7 @@ const Register = () => {
             <span className="terminal-title ml-4">register.sh</span>
           </div>
           
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Boot Sequence */}
             <div className="mb-6 text-xs text-term-gray font-mono space-y-1">
               <p>$ init user_registration_module</p>

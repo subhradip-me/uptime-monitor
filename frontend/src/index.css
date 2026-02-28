@@ -191,15 +191,62 @@
   }
   
   .data-grid th {
-    @apply text-left px-4 py-3 text-xs uppercase tracking-wider text-term-gray border-b border-term-border bg-term-bg;
+    @apply text-left px-2 py-2 text-[10px] sm:text-xs uppercase tracking-wider text-term-gray border-b border-term-border bg-term-bg;
   }
   
   .data-grid td {
-    @apply px-4 py-3 text-sm border-b border-term-border;
+    @apply px-2 py-2 text-xs sm:text-sm border-b border-term-border;
   }
   
   .data-grid tr:hover td {
     @apply bg-term-bg;
+  }
+  
+  /* Responsive Table Container */
+  .table-container {
+    @apply overflow-x-auto -mx-2 px-2;
+  }
+  
+  /* Mobile Optimizations */
+  @media (max-width: 640px) {
+    .terminal-header {
+      @apply px-2 py-1.5;
+    }
+    
+    .terminal-title {
+      @apply text-[10px];
+    }
+    
+    .nav-item {
+      @apply px-3 py-3 text-xs;
+      min-height: 44px;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-danger {
+      @apply px-3 py-2 text-xs;
+      min-height: 36px;
+    }
+    
+    .input, .input-select {
+      @apply px-3 py-2 text-xs;
+      min-height: 40px;
+    }
+    
+    .badge {
+      @apply px-1.5 py-0.5 text-[10px];
+    }
+    
+    /* Status dots - larger for touch */
+    .status-dot {
+      @apply w-2.5 h-2.5;
+    }
+  }
+  
+  /* Touch Device Optimizations */
+  @media (hover: none) {
+    .btn:hover, .nav-item:hover {
+      transform: none;
+    }
   }
   
   /* Scrollbar */

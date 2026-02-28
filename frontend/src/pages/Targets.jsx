@@ -308,26 +308,26 @@ const Targets = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 sm:space-y-6">
       {/* Header */}
       <div className="terminal-window">
         <div className="terminal-header">
           <Target className="h-4 w-4 text-term-green" />
           <span className="terminal-title">Target Management</span>
         </div>
-        <div className="p-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-xl font-bold text-term-white flex items-center gap-2">
+        <div className="p-2 sm:p-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3">
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-xl font-bold text-term-white flex items-center gap-1 sm:gap-2">
                 <span className="text-term-green">root@uptime:~$</span> targets
               </h1>
-              <p className="text-sm text-term-gray mt-1">Manage monitoring nodes</p>
+              <p className="text-[10px] sm:text-sm text-term-gray mt-0.5 sm:mt-1">Manage monitoring nodes</p>
             </div>
             <button
               onClick={() => setShowAddModal(true)}
-              className="btn btn-primary flex items-center space-x-2"
+              className="btn btn-primary flex items-center justify-center gap-1.5 w-full sm:w-auto text-xs sm:text-sm py-2 sm:py-2"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span>Add Target</span>
             </button>
           </div>
@@ -337,148 +337,265 @@ const Targets = () => {
       {/* Targets List */}
       <div className="terminal-window">
         {targets.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="data-grid">
-              <thead>
-                <tr>
-                  <th>Target</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th>Uptime</th>
-                  <th>Response</th>
-                  <th>Interval</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {targets.map((target) => (
-                  <tr key={target._id}>
-                    <td className="whitespace-nowrap">
-                      <div className="flex items-center">
-                        {getMonitorTypeIcon(target.monitorType)}
-                        <div className="ml-3">
-                          <div className="flex items-center gap-2">
-                            <div className="text-sm font-medium text-term-white">{target.name}</div>
-                            {target.certificateInfo?.valid !== null && target.certificateInfo?.daysUntilExpiry !== null && (
-                              <span 
-                                className={`inline-flex items-center px-2 py-0.5 text-xs font-medium border ${
-                                  target.certificateInfo.daysUntilExpiry <= 7 
-                                    ? 'border-term-red text-term-red' 
-                                    : target.certificateInfo.daysUntilExpiry <= 14
-                                    ? 'border-term-yellow text-term-yellow'
-                                    : target.certificateInfo.daysUntilExpiry <= 30
-                                    ? 'border-term-magenta text-term-magenta'
-                                    : 'border-term-green text-term-green'
-                                }`}
-                                title={`SSL expires in ${target.certificateInfo.daysUntilExpiry} days\\nIssuer: ${target.certificateInfo.issuer}`}
-                              >
-                                SSL:{target.certificateInfo.daysUntilExpiry}d
-                              </span>
-                            )}
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="data-grid">
+                <thead>
+                  <tr>
+                    <th className="text-left">Target</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th className="hidden md:table-cell">Uptime</th>
+                    <th className="hidden lg:table-cell">Response</th>
+                    <th className="hidden xl:table-cell">Interval</th>
+                    <th className="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {targets.map((target) => (
+                    <tr key={target._id} className="group">
+                      <td className="whitespace-nowrap">
+                        <div className="flex items-center">
+                          {getMonitorTypeIcon(target.monitorType)}
+                          <div className="ml-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-term-white">{target.name}</span>
+                              {target.certificateInfo?.valid !== null && target.certificateInfo?.daysUntilExpiry !== null && (
+                                <span 
+                                  className={`inline-flex items-center px-2 py-0.5 text-xs font-medium border ${
+                                    target.certificateInfo.daysUntilExpiry <= 7 
+                                      ? 'border-term-red text-term-red' 
+                                      : target.certificateInfo.daysUntilExpiry <= 14
+                                      ? 'border-term-yellow text-term-yellow'
+                                      : target.certificateInfo.daysUntilExpiry <= 30
+                                      ? 'border-term-magenta text-term-magenta'
+                                      : 'border-term-green text-term-green'
+                                  }`}
+                                  title={`SSL expires in ${target.certificateInfo.daysUntilExpiry} days\nIssuer: ${target.certificateInfo.issuer}`}
+                                >
+                                  SSL:{target.certificateInfo.daysUntilExpiry}d
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-term-gray">
+                              {target.monitorType === 'tcp' || target.monitorType === 'udp' 
+                                ? `${target.url}${target.port ? ':' + target.port : ''}`
+                                : target.url}
+                            </div>
                           </div>
-                          <div className="text-xs text-term-gray">
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap">
+                        <span className={getMonitorTypeBadge(target.monitorType)}>
+                          {(target.monitorType || 'http').toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap">
+                        <div className="flex items-center space-x-2">
+                          {getStatusIcon(target.lastStatus)}
+                          <span className={getStatusBadge(target.lastStatus)}>
+                            {target.lastStatus}
+                          </span>
+                          {target.isPaused && (
+                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium border border-term-yellow text-term-yellow">
+                              PAUSED
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap hidden md:table-cell">
+                        <div className="text-sm text-term-white">{target.uptimePercentage.toFixed(2)}%</div>
+                        <div className="text-xs text-term-gray">
+                          {target.successfulChecks}/{target.totalChecks}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap hidden lg:table-cell">
+                        <div className="text-sm text-term-white">
+                          {target.responseTime ? `${target.responseTime}ms` : 'N/A'}
+                        </div>
+                        <div className="text-xs text-term-gray">
+                          {target.lastChecked ? new Date(target.lastChecked).toLocaleDateString() : 'Never'}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap hidden xl:table-cell">
+                        <div className="flex items-center text-sm text-term-white">
+                          <Clock className="h-3 w-3 mr-1 text-term-gray" />
+                          {formatInterval(target.interval)}
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end space-x-1">
+                          {(target.alertSettings?.email?.enabled || 
+                            target.alertSettings?.slack?.enabled || 
+                            target.alertSettings?.discord?.enabled ||
+                            target.alertSettings?.teams?.enabled ||
+                            target.alertSettings?.telegram?.enabled ||
+                            target.alertSettings?.webhook?.enabled) && (
+                            <button
+                              onClick={() => handleTestAlert(target, 'DOWN')}
+                              className="p-1.5 text-term-magenta hover:bg-term-magenta hover:text-term-bg border border-term-magenta transition-colors"
+                              title="Test Alert"
+                            >
+                              <Bell className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          {target.isPaused ? (
+                            <button
+                              onClick={() => handleResumeTarget(target._id)}
+                              className="p-1.5 text-term-green hover:bg-term-green hover:text-term-bg border border-term-green transition-colors"
+                              title="Resume"
+                            >
+                              <Play className="h-3.5 w-3.5" />
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handlePauseTarget(target._id)}
+                              className="p-1.5 text-term-yellow hover:bg-term-yellow hover:text-term-bg border border-term-yellow transition-colors"
+                              title="Pause"
+                            >
+                              <Pause className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => openEditModal(target)}
+                            className="p-1.5 text-term-cyan hover:bg-term-cyan hover:text-term-bg border border-term-cyan transition-colors"
+                            title="Edit"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteTarget(target._id)}
+                            className="p-1.5 text-term-red hover:bg-term-red hover:text-term-bg border border-term-red transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="sm:hidden">
+              <div className="p-2 space-y-2">
+                {targets.map((target) => (
+                  <div key={target._id} className="border border-term-border bg-term-bg p-3 space-y-2">
+                    {/* Header: Name + Status */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        {getMonitorTypeIcon(target.monitorType)}
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-term-white truncate">{target.name}</p>
+                          <p className="text-[10px] text-term-gray truncate">
                             {target.monitorType === 'tcp' || target.monitorType === 'udp' 
                               ? `${target.url}${target.port ? ':' + target.port : ''}`
                               : target.url}
-                          </div>
+                          </p>
                         </div>
                       </div>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <span className={getMonitorTypeBadge(target.monitorType)}>
-                        {(target.monitorType || 'http').toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         {getStatusIcon(target.lastStatus)}
-                        <span className={getStatusBadge(target.lastStatus)}>
-                          {target.lastStatus}
-                        </span>
                         {target.isPaused && (
-                          <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium border border-term-yellow text-term-yellow">
-                            PAUSED
+                          <span className="inline-flex items-center px-1.5 py-0 text-[10px] font-medium border border-term-yellow text-term-yellow">
+                            P
                           </span>
                         )}
                       </div>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <div className="text-sm text-term-white">{target.uptimePercentage.toFixed(2)}%</div>
-                      <div className="text-xs text-term-gray">
-                        {target.successfulChecks}/{target.totalChecks} checks
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <div className="text-sm text-term-white">
-                        {target.responseTime ? `${target.responseTime}ms` : 'N/A'}
-                      </div>
-                      <div className="text-xs text-term-gray">
-                        {target.lastChecked ? new Date(target.lastChecked).toLocaleString() : 'Never'}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <div className="flex items-center text-sm text-term-white">
-                        <Clock className="h-3 w-3 mr-1 text-term-gray" />
-                        {formatInterval(target.interval)}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      <div className="flex space-x-1">
-                        {(target.alertSettings?.email?.enabled || 
-                          target.alertSettings?.slack?.enabled || 
-                          target.alertSettings?.discord?.enabled ||
-                          target.alertSettings?.teams?.enabled ||
-                          target.alertSettings?.telegram?.enabled ||
-                          target.alertSettings?.webhook?.enabled) && (
-                          <button
-                            onClick={() => handleTestAlert(target, 'DOWN')}
-                            className="p-1.5 text-term-magenta hover:bg-term-magenta hover:text-term-bg border border-term-magenta transition-colors"
-                            title="Test Alert"
-                          >
-                            <Bell className="h-3.5 w-3.5" />
-                          </button>
+                    </div>
+
+                    {/* Stats Row */}
+                    <div className="flex items-center justify-between text-[10px] text-term-gray pt-1 border-t border-term-border">
+                      <div className="flex items-center gap-3">
+                        <span className={getMonitorTypeBadge(target.monitorType)}>
+                          {(target.monitorType || 'http').toUpperCase()}
+                        </span>
+                        <span>{target.uptimePercentage.toFixed(0)}% uptime</span>
+                        {target.responseTime && (
+                          <span className="text-term-cyan">{target.responseTime}ms</span>
                         )}
-                        {target.isPaused ? (
-                          <button
-                            onClick={() => handleResumeTarget(target._id)}
-                            className="p-1.5 text-term-green hover:bg-term-green hover:text-term-bg border border-term-green transition-colors"
-                            title="Resume"
-                          >
-                            <Play className="h-3.5 w-3.5" />
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handlePauseTarget(target._id)}
-                            className="p-1.5 text-term-yellow hover:bg-term-yellow hover:text-term-bg border border-term-yellow transition-colors"
-                            title="Pause"
-                          >
-                            <Pause className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                        <button
-                          onClick={() => openEditModal(target)}
-                          className="p-1.5 text-term-cyan hover:bg-term-cyan hover:text-term-bg border border-term-cyan transition-colors"
-                          title="Edit"
-                        >
-                          <Edit2 className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteTarget(target._id)}
-                          className="p-1.5 text-term-red hover:bg-term-red hover:text-term-bg border border-term-red transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
                       </div>
-                    </td>
-                  </tr>
+                      <span>{formatInterval(target.interval)}</span>
+                    </div>
+
+                    {/* SSL Badge */}
+                    {target.certificateInfo?.valid !== null && target.certificateInfo?.daysUntilExpiry !== null && (
+                      <div className="pt-1">
+                        <span 
+                          className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium border ${
+                            target.certificateInfo.daysUntilExpiry <= 7 
+                              ? 'border-term-red text-term-red' 
+                              : target.certificateInfo.daysUntilExpiry <= 14
+                              ? 'border-term-yellow text-term-yellow'
+                              : target.certificateInfo.daysUntilExpiry <= 30
+                              ? 'border-term-magenta text-term-magenta'
+                              : 'border-term-green text-term-green'
+                          }`}
+                        >
+                          SSL expires in {target.certificateInfo.daysUntilExpiry}d
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-end gap-1 pt-1 border-t border-term-border">
+                      {(target.alertSettings?.email?.enabled || 
+                        target.alertSettings?.slack?.enabled || 
+                        target.alertSettings?.discord?.enabled ||
+                        target.alertSettings?.teams?.enabled ||
+                        target.alertSettings?.telegram?.enabled ||
+                        target.alertSettings?.webhook?.enabled) && (
+                        <button
+                          onClick={() => handleTestAlert(target, 'DOWN')}
+                          className="p-2 text-term-magenta hover:bg-term-magenta hover:text-term-bg border border-term-magenta transition-colors"
+                          title="Test Alert"
+                        >
+                          <Bell className="h-4 w-4" />
+                        </button>
+                      )}
+                      {target.isPaused ? (
+                        <button
+                          onClick={() => handleResumeTarget(target._id)}
+                          className="p-2 text-term-green hover:bg-term-green hover:text-term-bg border border-term-green transition-colors"
+                          title="Resume"
+                        >
+                          <Play className="h-4 w-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handlePauseTarget(target._id)}
+                          className="p-2 text-term-yellow hover:bg-term-yellow hover:text-term-bg border border-term-yellow transition-colors"
+                          title="Pause"
+                        >
+                          <Pause className="h-4 w-4" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => openEditModal(target)}
+                        className="p-2 text-term-cyan hover:bg-term-cyan hover:text-term-bg border border-term-cyan transition-colors"
+                        title="Edit"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTarget(target._id)}
+                        className="p-2 text-term-red hover:bg-term-red hover:text-term-bg border border-term-red transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
+          </>
         ) : (
-          <div className="text-center py-12">
-            <Globe className="mx-auto h-12 w-12 text-term-gray mb-4" />
+          <div className="text-center py-8 sm:py-12 px-4">
+            <Globe className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-term-gray mb-4" />
             <p className="text-term-gray text-sm mb-2">No targets configured</p>
             <p className="text-term-gray text-xs mb-4">Initialize monitoring by adding your first target</p>
             <button 
@@ -494,8 +611,8 @@ const Targets = () => {
 
       {/* Add Target Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-10 mx-auto p-0 border border-term-border w-[600px] max-w-[95vw] bg-term-bg-light max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/80 overflow-y-auto h-full w-full z-50 p-2 sm:p-4">
+          <div className="relative top-0 sm:top-10 mx-auto p-0 border border-term-border w-full max-w-[600px] bg-term-bg-light max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="terminal-header">
               <Terminal className="h-4 w-4 text-term-green" />
               <span className="terminal-title">Add New Target</span>
@@ -506,7 +623,7 @@ const Targets = () => {
                 <XCircle className="h-4 w-4" />
               </button>
             </div>
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <form onSubmit={handleAddTarget} className="space-y-4">
                 <div>
                   <label className="form-label font-mono">Name</label>
@@ -632,27 +749,27 @@ const Targets = () => {
 
                 <div className="border-t border-term-border pt-4 space-y-3">
                   <h4 className="text-sm font-medium text-term-white">Thresholds</h4>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="form-label font-mono">Failure Threshold</label>
+                      <label className="form-label font-mono text-xs sm:text-sm">Failure Threshold</label>
                       <input
                         type="number"
                         min="1"
                         max="10"
                         value={formData.failureThreshold}
                         onChange={(e) => setFormData({ ...formData, failureThreshold: parseInt(e.target.value) })}
-                        className="input font-mono"
+                        className="input font-mono text-sm"
                       />
                     </div>
                     <div>
-                      <label className="form-label font-mono">Recovery Threshold</label>
+                      <label className="form-label font-mono text-xs sm:text-sm">Recovery Threshold</label>
                       <input
                         type="number"
                         min="1"
                         max="10"
                         value={formData.recoveryThreshold}
                         onChange={(e) => setFormData({ ...formData, recoveryThreshold: parseInt(e.target.value) })}
-                        className="input font-mono"
+                        className="input font-mono text-sm"
                       />
                     </div>
                   </div>
@@ -689,8 +806,8 @@ const Targets = () => {
 
       {/* Edit Target Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black/80 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-10 mx-auto p-0 border border-term-border w-[600px] max-w-[95vw] bg-term-bg-light max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/80 overflow-y-auto h-full w-full z-50 p-2 sm:p-4">
+          <div className="relative top-0 sm:top-10 mx-auto p-0 border border-term-border w-full max-w-[600px] bg-term-bg-light max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="terminal-header">
               <Terminal className="h-4 w-4 text-term-cyan" />
               <span className="terminal-title">Edit Target</span>
@@ -701,7 +818,7 @@ const Targets = () => {
                 <XCircle className="h-4 w-4" />
               </button>
             </div>
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <form onSubmit={handleEditTarget} className="space-y-4">
                 <div>
                   <label className="form-label font-mono">Name</label>
@@ -821,27 +938,27 @@ const Targets = () => {
 
                 <div className="border-t border-term-border pt-4 space-y-3">
                   <h4 className="text-sm font-medium text-term-white">Thresholds</h4>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="form-label font-mono">Failure Threshold</label>
+                      <label className="form-label font-mono text-xs sm:text-sm">Failure Threshold</label>
                       <input
                         type="number"
                         min="1"
                         max="10"
                         value={formData.failureThreshold}
                         onChange={(e) => setFormData({ ...formData, failureThreshold: parseInt(e.target.value) })}
-                        className="input font-mono"
+                        className="input font-mono text-sm"
                       />
                     </div>
                     <div>
-                      <label className="form-label font-mono">Recovery Threshold</label>
+                      <label className="form-label font-mono text-xs sm:text-sm">Recovery Threshold</label>
                       <input
                         type="number"
                         min="1"
                         max="10"
                         value={formData.recoveryThreshold}
                         onChange={(e) => setFormData({ ...formData, recoveryThreshold: parseInt(e.target.value) })}
-                        className="input font-mono"
+                        className="input font-mono text-sm"
                       />
                     </div>
                   </div>

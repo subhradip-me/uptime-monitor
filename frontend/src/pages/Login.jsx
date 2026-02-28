@@ -69,7 +69,7 @@ const Login = () => {
             <span className="terminal-title ml-4">login.sh</span>
           </div>
           
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Boot Sequence */}
             <div className="mb-6 text-xs text-term-gray font-mono space-y-1">
               <p>$ init uptime_monitor_v2.0.0</p>
